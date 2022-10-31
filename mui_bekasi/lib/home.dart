@@ -11,6 +11,7 @@ import 'package:shimmer/shimmer.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class Home extends KFDrawerContent {
+
   Home({Key key});
 
   @override
@@ -22,6 +23,7 @@ class _MainPageState extends State<Home> {
   YoutubePlayerController _controller;
   bool cekLoading = false;
   dynamic response = null;
+  bool fullScreen = false;
 
   @override
   void initState() {
@@ -61,9 +63,13 @@ class _MainPageState extends State<Home> {
       _controller = YoutubePlayerController(
         initialVideoId: videoId,
         flags: YoutubePlayerFlags(
-          autoPlay: false,
           mute: false,
-          loop: true
+          autoPlay: true,
+          disableDragSeek: false,
+          loop: false,
+          isLive: false,
+          forceHD: false,
+          enableCaption: true,
         ),
       );
       cekLoading = true;
@@ -73,9 +79,13 @@ class _MainPageState extends State<Home> {
       _controller = YoutubePlayerController(
         initialVideoId: videoId,
         flags: YoutubePlayerFlags(
-          autoPlay: false,
           mute: false,
-          loop: true
+          autoPlay: true,
+          disableDragSeek: false,
+          loop: false,
+          isLive: false,
+          forceHD: false,
+          enableCaption: true,
         ),
       );
       cekLoading = true;
@@ -85,138 +95,208 @@ class _MainPageState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: ListView(
-        children: <Widget>[
-          Column(
-            children: <Widget>[
-              Container(
-                color: HexColor('#7cb342'),
-                padding: EdgeInsets.only(top: 5, bottom: 5, left: 5),
-                child: Row(
-                  children: <Widget>[
-                    ClipRRect(
-                      borderRadius: BorderRadius.all(Radius.circular(32.0)),
-                      child: Material(
-                        shadowColor: Colors.transparent,
-                        color: Colors.transparent,
-                        child: Row(
-                          children: [
-                            IconButton(
-                              icon: Icon(
-                                Icons.menu,
-                                color: Colors.white,
-                              ),
-                              onPressed: widget.onMenuPressed,
-                            ),
-                          ],
-                        )
-                      ),
-                    ),
-                    Text("Home", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white), textAlign: TextAlign.center,),
-                    Spacer(),
-                    InkWell(
-                      child: Container(
-                        height: 40,
-                        width: 40,
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20),
-                            image: DecorationImage(
-                                image: AssetImage('images/ic_logo.jpg'),
-                                fit: BoxFit.cover)),
-                      ),
-                      onTap: (){
-                        return Home();
-                      },
-                    ),
-                    SizedBox(width: 15)
-                  ],
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    (cekLoading)?YoutubePlayer(
-                      controller: _controller,
-                      showVideoProgressIndicator: true,
-                      onReady: (){
-                        print('READY');
-                      },
-                      bottomActions: [
-                        CurrentPosition(),
-                        ProgressBar(
-                          isExpanded: true,
-                          colors: ProgressBarColors(
-                            playedColor: Colors.amber,
-                            handleColor: Colors.amberAccent,
-                          ),
-                        ),
-                        const PlaybackSpeedButton(),
-                      ],
-                    ):_loadingView(),
-                    SizedBox(height: 15),
-                    Row(
-                      children: <Widget>[
-                        Text("MUI TV KOTA BEKASI", style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
-                      ],
-                    ),
-                    SizedBox(height: 15),
-                    Text("MUI-TV Kota Bekasi merupakan gabungan dua kata yang terdiri dari kata MUI-TV adalah singkatan dari Majelis Ulama "
-                        "Indonesia Televisi dan kata Kota Bekasi yang merupakan nama kota tempat MUI-TV itu berkantor. MUI-TV Kota Bekasi "
-                        "adalah sebuah stasiun televisi nasional yang mulai mengudara melalui channel Youtube pada tanggal 23 bulan Februari "
-                        "tahun 2022 dan resmi diluncurkan pada 26 Februari 2022.", style: TextStyle(color: Colors.grey),),
-                    SizedBox(height: 15),
-                    Row(
-                      children: <Widget>[
-                        Text("Alamat", style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
-                      ],
-                    ),
-                    SizedBox(height: 15),
-                    Text("Jl. Rawatembaga, RT 005 RW 002 Kel. Margajaya Kec. Bekasi Selatan, Kota Bekasi 17141", style: TextStyle(color: Colors.grey),),
-                    SizedBox(height: 15),
-                    Row(
-                      children: <Widget>[
-                        Text("Email", style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
-                      ],
-                    ),
-                    SizedBox(height: 15),
-                    Text("muikotabekasi26@gmail.com", style: TextStyle(color: Colors.grey),),
-                    SizedBox(height: 15),
-                    ImageSlideshow(
-                      indicatorColor: Colors.blue,
-                      onPageChanged: (value) {
-
-                      },
-                      autoPlayInterval: 15000,
-                      isLoop: true,
-                      children: [
-                        Image.asset(
-                          'images/activitas/ic_home_1.jpg',
-                          fit: BoxFit.cover,
-                        ),
-                        Image.asset(
-                          'images/activitas/ic_home_2.jpg',
-                          fit: BoxFit.cover,
-                        ),
-                        Image.asset(
-                          'images/activitas/ic_home_3.jpg',
-                          fit: BoxFit.cover,
-                        ),
-                        Image.asset(
-                          'images/activitas/ic_home_4.jpg',
-                          fit: BoxFit.cover,
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ],
+    return WillPopScope(
+      onWillPop: (){
+        (fullScreen)?SystemChrome.setPreferredOrientations(DeviceOrientation.values):SystemNavigator.pop();
+        setState(() {
+          fullScreen = false;
+        });
+        _controller.reset();
+        _controller.reload();
+        // return ;
+      },
+      child: (cekLoading && fullScreen)?YoutubePlayer(
+        controller: _controller,
+        showVideoProgressIndicator: true,
+        onReady: (){
+          print('READY');
+        },
+        bottomActions: [
+          CurrentPosition(),
+          ProgressBar(
+            isExpanded: true,
+            colors: ProgressBarColors(
+              playedColor: Colors.amber,
+              handleColor: Colors.amberAccent,
+            ),
+          ),
+          const PlaybackSpeedButton(),
+          IconButton(
+            icon: Icon(
+              ((fullScreen)?Icons.fullscreen_exit:Icons.fullscreen),
+              color: Colors.white,
+              size: 25.0,
+            ),
+            onPressed: () {
+              setState(() {
+                fullScreen = !fullScreen;
+              });
+              if(fullScreen) {
+                _controller.toggleFullScreenMode();
+                _controller.reset();
+                _controller.reload();
+              }else{
+                SystemChrome.setPreferredOrientations(DeviceOrientation.values);
+                _controller.reset();
+                _controller.reload();
+              }
+            },
           ),
         ],
+      ):SafeArea(
+        child: ListView(
+          children: <Widget>[
+            Column(
+              children: <Widget>[
+                (!fullScreen)?Container(
+                  color: HexColor('#7cb342'),
+                  padding: EdgeInsets.only(top: 5, bottom: 5, left: 5),
+                  child: Row(
+                    children: <Widget>[
+                      ClipRRect(
+                        borderRadius: BorderRadius.all(Radius.circular(32.0)),
+                        child: Material(
+                            shadowColor: Colors.transparent,
+                            color: Colors.transparent,
+                            child: Row(
+                              children: [
+                                IconButton(
+                                  icon: Icon(
+                                    Icons.menu,
+                                    color: Colors.white,
+                                  ),
+                                  onPressed: widget.onMenuPressed,
+                                ),
+                              ],
+                            )
+                        ),
+                      ),
+                      Text("Home", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white), textAlign: TextAlign.center,),
+                      Spacer(),
+                      InkWell(
+                        child: Container(
+                          height: 40,
+                          width: 40,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              image: DecorationImage(
+                                  image: AssetImage('images/ic_logo.jpg'),
+                                  fit: BoxFit.cover)),
+                        ),
+                        onTap: (){
+                          return Home();
+                        },
+                      ),
+                      SizedBox(width: 15)
+                    ],
+                  ),
+                ):Container(),
+                Padding(
+                  padding: EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      (cekLoading)?YoutubePlayer(
+                        controller: _controller,
+                        showVideoProgressIndicator: true,
+                        onReady: (){
+                          print('READY');
+                        },
+                        bottomActions: [
+                          CurrentPosition(),
+                          ProgressBar(
+                            isExpanded: true,
+                            colors: ProgressBarColors(
+                              playedColor: Colors.amber,
+                              handleColor: Colors.amberAccent,
+                            ),
+                          ),
+                          const PlaybackSpeedButton(),
+                          IconButton(
+                            icon: Icon(
+                              ((fullScreen)?Icons.fullscreen_exit:Icons.fullscreen),
+                              color: Colors.white,
+                              size: 25.0,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                fullScreen = !fullScreen;
+                              });
+                              if(fullScreen) {
+                                _controller.toggleFullScreenMode();
+                                _controller.reset();
+                                _controller.reload();
+                              }else{
+                                SystemChrome.setPreferredOrientations(DeviceOrientation.values);
+                                _controller.reset();
+                                _controller.reload();
+                              }
+                            },
+                          ),
+                        ],
+                      ):_loadingView(),
+                      (fullScreen)?Container():SizedBox(height: 15),
+                      (fullScreen)?Container():Row(
+                        children: <Widget>[
+                          Text("MUI TV KOTA BEKASI", style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
+                        ],
+                      ),
+                      (fullScreen)?Container():SizedBox(height: 15),
+                      (fullScreen)?Container():Text("MUI-TV Kota Bekasi merupakan gabungan dua kata yang terdiri dari kata MUI-TV adalah singkatan dari Majelis Ulama "
+                          "Indonesia Televisi dan kata Kota Bekasi yang merupakan nama kota tempat MUI-TV itu berkantor. MUI-TV Kota Bekasi "
+                          "adalah sebuah stasiun televisi nasional yang mulai mengudara melalui channel Youtube pada tanggal 23 bulan Februari "
+                          "tahun 2022 dan resmi diluncurkan pada 26 Februari 2022.", style: TextStyle(color: Colors.grey),),
+                      (fullScreen)?Container():SizedBox(height: 15),
+                      (fullScreen)?Container():Row(
+                        children: <Widget>[
+                          Text("Alamat", style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
+                        ],
+                      ),
+                      (fullScreen)?Container():SizedBox(height: 15),
+                      (fullScreen)?Container():Text("Jl. Rawatembaga, RT 005 RW 002 Kel. Margajaya Kec. Bekasi Selatan, Kota Bekasi 17141", style: TextStyle(color: Colors.grey),),
+                      (fullScreen)?Container():SizedBox(height: 15),
+                      (fullScreen)?Container():Row(
+                        children: <Widget>[
+                          Text("Email", style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
+                        ],
+                      ),
+                      (fullScreen)?Container():SizedBox(height: 15),
+                      Text("muikotabekasi26@gmail.com", style: TextStyle(color: Colors.grey),),
+                      (fullScreen)?Container():SizedBox(height: 15),
+                      (fullScreen)?Container():ImageSlideshow(
+                        indicatorColor: Colors.blue,
+                        onPageChanged: (value) {
+
+                        },
+                        autoPlayInterval: 15000,
+                        isLoop: true,
+                        children: [
+                          Image.asset(
+                            'images/activitas/ic_home_1.jpg',
+                            fit: BoxFit.cover,
+                          ),
+                          Image.asset(
+                            'images/activitas/ic_home_2.jpg',
+                            fit: BoxFit.cover,
+                          ),
+                          Image.asset(
+                            'images/activitas/ic_home_3.jpg',
+                            fit: BoxFit.cover,
+                          ),
+                          Image.asset(
+                            'images/activitas/ic_home_4.jpg',
+                            fit: BoxFit.cover,
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

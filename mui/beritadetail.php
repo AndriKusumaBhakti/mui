@@ -145,9 +145,17 @@
                     </div>
                   </div>
                   </div>
-                  
+                  <?php if ( $rowkomen["lain"] !== ''){?>
+                  <div class="mt-3 right">
+                    <div class="comment-card">
+                    <div class="container-card">
+                      <div class="nama"><?php echo "Admin"?></h6>
+                      <div class="isi"><?php echo $rowkomen["lain"];?></div>
+                    </div>
+                  </div>
+                  </div>
                   <div class="mt-5">
-
+                  <?php }?>
                   </div>
                  <?php
               }

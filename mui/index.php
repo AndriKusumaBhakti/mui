@@ -75,11 +75,6 @@
 
 
 <body>
-
-
-
-  <!-- ======= Header ======= -->
-
   <header id="header" class="fixed-top d-flex align-items-center header-transparent">
 
     <div class="container d-flex align-items-center justify-content-between">
@@ -87,11 +82,6 @@
       <div class="logo">
 
         <h1><a href="./assets/img/about.png"></img><img src="./assets/img/about.png"><span></span></a></h1>
-
-        <!-- Uncomment below if you prefer to use an image logo -->
-
-        <!-- <a href="index.html"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
-
       </div>
 
 
@@ -106,44 +96,6 @@
 
           <li><a class="nav-link scrollto" href="index.php#about">Tentang Kami</a></li>
 
-          <!-- <li><a class="nav-link scrollto" href="#team">Team</a></li>
-
-          <li><a class="nav-link scrollto" href="#pricing">Pricing</a></li>
-
-          <li class="dropdown"><a href="#"><span>Drop Down</span> <i class="bi bi-chevron-down"></i></a>
-
-            <ul>
-
-              <li><a href="#">Drop Down 1</a></li>
-
-              <li class="dropdown"><a href="#"><span>Deep Drop Down</span> <i class="bi bi-chevron-right"></i></a>
-
-                <ul>
-
-                  <li><a href="#">Deep Drop Down 1</a></li>
-
-                  <li><a href="#">Deep Drop Down 2</a></li>
-
-                  <li><a href="#">Deep Drop Down 3</a></li>
-
-                  <li><a href="#">Deep Drop Down 4</a></li>
-
-                  <li><a href="#">Deep Drop Down 5</a></li>
-
-                </ul>
-
-              </li>
-
-              <li><a href="#">Drop Down 2</a></li>
-
-              <li><a href="#">Drop Down 3</a></li>
-
-              <li><a href="#">Drop Down 4</a></li>
-
-            </ul>
-
-          </li> -->
-
           <li><a class="nav-link scrollto" href="index.php#contact">Kontak</a></li>
 
         </ul>
@@ -156,11 +108,7 @@
 
     </div>
 
-  </header><!-- End Header -->
-
-
-
-  <!-- ======= Hero Section ======= -->
+  </header>
 
   <section id="hero">
 
@@ -179,10 +127,12 @@
                 $linkstream = $rowstream["link_channel_web"];
 
             }
-
+            if($linkstream != ''){
+              ?>
+                <iframe width="420" height="315" style="position: relative;" src="<?php echo $linkstream; ?>?autoplay=1&mute=1"></iframe>
+              <?php
+            }
         ?>
-
-        <iframe width="420" height="315" style="position: relative;" src="<?php echo $linkstream; ?>?autoplay=1&mute=1"></iframe>
 
         <div class="col-lg-7 pt-5 pt-lg-0 order-2 order-lg-1 d-flex align-items-center">
 
@@ -201,14 +151,6 @@
           </div>
 
         </div>
-
-        <!-- <div class="col-lg-4 order-1 order-lg-2 hero-img" data-aos="zoom-out" data-aos-delay="300">
-
-          <img src="assets/img/hero-img.png" class="img-fluid animated" alt="">
-
-        </div>
-
-      </div> -->
 
     </div>
 
@@ -246,7 +188,7 @@
 
 
 
-  </section><!-- End Hero -->
+  </section>
 
 
 

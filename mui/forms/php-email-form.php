@@ -6,13 +6,13 @@
 
     $from = "adminmui@muitvkotabekasi.com";    
 
-    $to = "muikotabekasi27@gmail.com ";   
+    $to = "muikotabekasi27@gmail.com";   
 
     $subject = $_POST['subject'];    
 
     $message = $_POST['message'];   
 
-    $headers = "From:" . $_POST['name'];   
+    $headers = "From:" . $_POST['name'] . "-" . $_POST['email'];   
 
     if(mail($to,$subject,$message, $headers)){
 
